@@ -1,8 +1,6 @@
 using PCNetworkBackup.Core.Models;
 using PCNetworkBackup.Core.Services;
 using System.Diagnostics;
-using PCNetworkBackup.Core.Models;
-using PCNetworkBackup.Core.Services;
 
 namespace PCNetworkBackup.App.Forms;
 

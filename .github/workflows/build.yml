@@ -8,6 +8,9 @@ on:
     branches: [ main ]
   workflow_dispatch: {}
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_NODE_TYPE: node24
+
 jobs:
   build:
     runs-on: windows-latest
@@ -89,10 +92,12 @@ jobs:
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
-        if: startsWith(github.ref, 'refs/tags/')
         with:
+          tag_name: "latest"
+          name: "Latest Release"
           files: |
             UTZ_FileSync_Portable_Full.zip
             UTZ_FileSync_Portable_Small.zip
+
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
