@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>PCNetworkBackup.App</RootNamespace>
+    <AssemblyName>PCNetworkBackup</AssemblyName>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Platforms>x64</Platforms>
+
+    <!-- Self-contained, single-file publish so the end user only needs one
+         portable PCNetworkBackup.exe with no separate .NET install.
+         These are also passed explicitly on the `dotnet publish` command
+         line in the GitHub Actions workflow, which is what actually
+         produces the release artifact; having them here too makes local
+         `dotnet publish` (if you ever get a Windows machine) work the same way. -->
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <SelfContained>true</SelfContained>
+    <PublishSingleFile>true</PublishSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <!-- Trimming intentionally OFF: WinForms relies on reflection, and
+         aggressive trimming is a common source of "works in Debug, breaks
+         in the published exe" failures. Not worth the size savings here. -->
+    <PublishTrimmed>false</PublishTrimmed>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PCNetworkBackup.Core\PCNetworkBackup.Core.csproj" />
+  </ItemGroup>
+
+</Project>

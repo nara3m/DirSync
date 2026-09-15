@@ -1,0 +1,58 @@
+name: Build Windows Executable
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch: {}
+
+jobs:
+  build:
+    # Microsoft-hosted Windows runner - this is what lets this project be
+    # built and tested entirely from the browser/cloud, with no local
+    # Windows development machine required.
+    runs-on: windows-latest
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        run: |
+          dotnet restore src/PCNetworkBackup.Core/PCNetworkBackup.Core.csproj
+          dotnet restore src/PCNetworkBackup.App/PCNetworkBackup.App.csproj
+          dotnet restore tests/PCNetworkBackup.Tests/PCNetworkBackup.Tests.csproj
+
+      - name: Build
+        run: dotnet build src/PCNetworkBackup.App/PCNetworkBackup.App.csproj --configuration Release --no-restore
+
+      - name: Run tests
+        run: dotnet test tests/PCNetworkBackup.Tests/PCNetworkBackup.Tests.csproj --configuration Release --verbosity normal
+
+      - name: Publish self-contained single-file win-x64 executable
+        run: >
+          dotnet publish src/PCNetworkBackup.App/PCNetworkBackup.App.csproj
+          --configuration Release
+          --runtime win-x64
+          --self-contained true
+          -p:PublishSingleFile=true
+          -p:IncludeNativeLibrariesForSelfExtract=true
+          -p:PublishTrimmed=false
+          --output publish
+
+      - name: Rename artifact
+        shell: pwsh
+        run: Copy-Item "publish/PCNetworkBackup.exe" "publish/PCNetworkBackup-win-x64.exe"
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: PCNetworkBackup-win-x64
+          path: publish/PCNetworkBackup-win-x64.exe
+          if-no-files-found: error
