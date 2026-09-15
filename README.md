@@ -1,9 +1,11 @@
 # PC FileSync
 
 **PC FileSync** is a Tool for Windows 10 Enterprise LTSC version 21H2 OS Build 19044.7725 PCs in UTZ. 
-This Tool is Part 1 of a 2 Parts approach for File Back Up. 
-Part 1. This tool. File Sync automatically copies your personal computer folders (like **Documents**, **Pictures**, or **Desktop**) to your Network Drive 
-Part 2. Not this Tool. Files from Network Drive are backed up to MUW Servers.
+
+This Tool is Part 1 of a 2 Parts approach for File Back Up.
+
+- Part 1. This tool. File Sync automatically copies your personal computer folders (like **Documents**, **Pictures**, or **Desktop**) to your Network Drive 
+- Part 2. Not this Tool. Files from Network Drive are backed up to MUW Servers.
 
 ![PC FileSync Main Window](images/WinSync.PNG)
 
