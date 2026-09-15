@@ -6,14 +6,21 @@ namespace PCNetworkBackup.Tests;
 public class SingleInstanceGuardTests
 {
     [Fact]
-    public void SecondGuard_CannotAcquire_WhileFirstIsHeld()
+	public void SecondGuard_CannotAcquire_WhileFirstIsHeld()
     {
         var name = $"Global\\PCNB_Test_{Guid.NewGuid():N}";
         using var first = new SingleInstanceGuard(name);
-        using var second = new SingleInstanceGuard(name);
+        
+        // Push the second guard to a background thread so the Mutex 
+        // correctly recognizes it as a separate, competing requester.
+        var secondAcquired = Task.Run(() => 
+        {
+            using var second = new SingleInstanceGuard(name);
+            return second.Acquired;
+        }).GetAwaiter().GetResult();
 
         Assert.True(first.Acquired);
-        Assert.False(second.Acquired);
+        Assert.False(secondAcquired);
     }
 
     [Fact]
