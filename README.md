@@ -1,6 +1,6 @@
 # PC FileSync
 
-**PC FileSync** is a simple helper program for Windows. It automatically copies your personal computer folders (like **Documents**, **Pictures**, or **Desktop**) to your network backup drive so your files stay safely backed up.
+**PC FileSync** is a simple helper program for Windows. It automatically copies your personal computer folders (like **Documents**, **Pictures**, or **Desktop**) to your Network Drive (and from Network Drive to MUW Backup Server) so your files have have a safely backed up.
 
 ![PC FileSync Main Window](images/WinSync.PNG)
 
@@ -10,12 +10,18 @@
 
 This program creates an **exact mirror copy** of your folders onto your Network drive.
 
-1. **Files moves one way (not bidirectional):** Changes on your C:// drive copy over to the Network drive and from Network Drive to MUW Backup Server. example Network drive is **B://BGS032/Nara**, your Network Drive letter will not be *B", it will be different.
- **File Sync and Backup Frequency :** You set up **File Sync** frequency between your C Drive and Network Drive using **PC FileSync** settings. **Backup** frequency between NetworkDrive and MUW Server is scheduled **ONLY** in the night.
-2. **Can files be lost permanently ?:** Yes, if you created a file and deleted a file in less than 24 hours, then that file will not be backed up in MUW Server and will be lost permanently. **OR** if the file is deleted today and you want to retrieve after 6 months, then also file will be lost permanently.
-3. **What happens if I delete a file in C Drive:** File will also be deleted from Network drive but the file **may** be present in MUW Backup Server (see point 2 above).
-4. **What is MUW Backup Server ?**: MUW IT uses [TSM Backup Server](https://intranet.meduniwien.ac.at/allgemeines/it-services/service-allgemein/tsm-backup/#c1948). Files in Network drive are saved in MUW Backup Server for 6 months. After that they are deleted. 
-5. **How to retrieve files from MUW Backup Server:** Contact IT Services, email address is available in [MUW Intranet](https://intranet.meduniwien.ac.at/allgemeines/it-services/infrastruktur/backupsysteme/#c3597).
+1. **Files moves one way (not bidirectional)**
+   * Changes on your C drive copy over to the Network drive and from Network Drive to MUW Backup Server. example Network drive in above picture is **B://BGS032/Nara**, your Network Drive letter will not be **B**, it will be different.
+2. **File Sync and Backup Frequency**
+   * You set up **File Sync** frequency between your C Drive and Network Drive using **PC FileSync** settings. **Backup** frequency between NetworkDrive and MUW Server is scheduled **ONLY** in the night.
+3. **Can files be lost permanently ?:**
+   * Yes, if you created a file and deleted a file in less than 24 hours, then that file will not be backed up in MUW Server and will be lost permanently. **OR** if the file is deleted today and you want to retrieve after 6 months, then also file will be lost permanently.
+4. **What happens if I delete a file in C Drive ?**
+   * File will also be deleted from Network drive but the file **may** be present in MUW Backup Server (see point 3 above).
+5. **What is MUW Backup Server ?**
+   * MUW IT uses [TSM Backup Server](https://intranet.meduniwien.ac.at/allgemeines/it-services/service-allgemein/tsm-backup/#c1948). Files in Network drive are saved in MUW Backup Server for 6 months. After that they are deleted.
+6. **How to retrieve files from MUW Backup Server ?**
+   * Contact IT Services, email address is available in [MUW Intranet](https://intranet.meduniwien.ac.at/allgemeines/it-services/infrastruktur/backupsysteme/#c3597).
 
 ---
 
