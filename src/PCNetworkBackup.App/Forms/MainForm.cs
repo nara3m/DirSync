@@ -119,6 +119,8 @@ public class MainForm : Form
         _advancedLink.Left = 15; _advancedLink.Top = y;
         Controls.Add(_advancedLink);
 
+        y += 25; // Move down to the next line
+
         // Position copyright label right below Advanced
         _githubLink.Left = 15; _githubLink.Top = y;
         Controls.Add(_githubLink);
