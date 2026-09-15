@@ -32,8 +32,17 @@ jobs:
       - name: Build
         run: dotnet build src/PCNetworkBackup.App/PCNetworkBackup.App.csproj --configuration Release --no-restore
 
+      # Modified test step to include the TRX logger
       - name: Run tests
-        run: dotnet test tests/PCNetworkBackup.Tests/PCNetworkBackup.Tests.csproj --configuration Release --verbosity normal
+        run: dotnet test tests/PCNetworkBackup.Tests/PCNetworkBackup.Tests.csproj --configuration Release --verbosity normal --logger "trx;LogFileName=test-results.trx"
+
+      # New step inserted right after running tests
+      - name: Upload Test Results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: Test-Results
+          path: '**/*.trx'
 
       - name: Publish self-contained single-file win-x64 executable
         run: >
