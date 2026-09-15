@@ -1,5 +1,8 @@
 using PCNetworkBackup.Core.Models;
 using PCNetworkBackup.Core.Services;
+using System.Diagnostics;
+using PCNetworkBackup.Core.Models;
+using PCNetworkBackup.Core.Services;
 
 namespace PCNetworkBackup.App.Forms;
 
@@ -24,15 +27,22 @@ public class MainForm : Form
     private readonly Button _syncNowButton = new() { Text = "Sync Now" };
     private readonly Button _saveEnableButton = new() { Text = "Save && Enable" };
     private readonly Button _disableButton = new() { Text = "Disable Backup" };
-    private readonly LinkLabel _advancedLink = new() { Text = "Advanced / debug info" };
+    private readonly LinkLabel _advancedLink = new() { Text = "Advanced" };
+    // Add the copyright & GitHub link control
+    private readonly LinkLabel _githubLink = new() 
+    { 
+        Text = "© 2026 Nara Marella • GitHub", 
+        AutoSize = true, 
+        LinkColor = Color.Gray 
+    };
 
     private List<MappedDrive> _drives = new();
     private AppConfig _config = ConfigService.Load();
 
     public MainForm()
     {
-        Text = "PC Network Backup";
-        ClientSize = new Size(460, 530);
+        Text = "PC FileSync";
+        ClientSize = new Size(460, 560); // Increased height from 530 to 560 to accommodate the footer
         FormBorderStyle = FormBorderStyle.FixedDialog;
         MaximizeBox = false;
         StartPosition = FormStartPosition.CenterScreen;
@@ -47,6 +57,9 @@ public class MainForm : Form
         _saveEnableButton.Click += async (_, _) => await OnSaveAndEnableAsync();
         _disableButton.Click += (_, _) => OnDisable();
         _advancedLink.LinkClicked += (_, _) => ShowAdvanced();
+        // Adding click handler for the GitHub link
+        _githubLink.LinkClicked += (_, _) => 
+            Process.Start(new ProcessStartInfo("https://github.com/nara3m/WinSync") { UseShellExecute = true });
     }
 
     private void BuildLayout()
@@ -107,6 +120,10 @@ public class MainForm : Form
 
         _advancedLink.Left = 15; _advancedLink.Top = y;
         Controls.Add(_advancedLink);
+
+        // Position copyright label right below Advanced
+        _githubLink.Left = 15; _githubLink.Top = y;
+        Controls.Add(_githubLink);
     }
 
     private static string FormatInterval(int minutes) => minutes switch

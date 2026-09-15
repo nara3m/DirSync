@@ -3,16 +3,16 @@ name: Build Windows Executable
 on:
   push:
     branches: [ main ]
+    tags: [ 'v*' ]
   pull_request:
     branches: [ main ]
   workflow_dispatch: {}
 
 jobs:
   build:
-    # Microsoft-hosted Windows runner - this is what lets this project be
-    # built and tested entirely from the browser/cloud, with no local
-    # Windows development machine required.
     runs-on: windows-latest
+    permissions:
+      contents: write # Grants permission to create releases and upload assets
 
     steps:
       - name: Check out source
@@ -32,11 +32,9 @@ jobs:
       - name: Build
         run: dotnet build src/PCNetworkBackup.App/PCNetworkBackup.App.csproj --configuration Release --no-restore
 
-      # Modified test step to include the TRX logger
       - name: Run tests
         run: dotnet test tests/PCNetworkBackup.Tests/PCNetworkBackup.Tests.csproj --configuration Release --verbosity normal --logger "trx;LogFileName=test-results.trx"
 
-      # New step inserted right after running tests
       - name: Upload Test Results
         if: always()
         uses: actions/upload-artifact@v4
@@ -44,7 +42,8 @@ jobs:
           name: Test-Results
           path: '**/*.trx'
 
-      - name: Publish self-contained single-file win-x64 executable
+      # 1. Self-contained build (Includes .NET runtime ~180MB)
+      - name: Publish self-contained win-x64 executable (Full)
         run: >
           dotnet publish src/PCNetworkBackup.App/PCNetworkBackup.App.csproj
           --configuration Release
@@ -53,15 +52,47 @@ jobs:
           -p:PublishSingleFile=true
           -p:IncludeNativeLibrariesForSelfExtract=true
           -p:PublishTrimmed=false
-          --output publish
+          --output publish_full
 
-      - name: Rename artifact
+      # 2. Framework-dependent build (Requires installed .NET 8 Desktop Runtime ~15MB)
+      - name: Publish framework-dependent win-x64 executable (Small)
+        run: >
+          dotnet publish src/PCNetworkBackup.App/PCNetworkBackup.App.csproj
+          --configuration Release
+          --runtime win-x64
+          --self-contained false
+          -p:PublishSingleFile=true
+          --output publish_small
+
+      - name: Rename executables
         shell: pwsh
-        run: Copy-Item "publish/PCNetworkBackup.exe" "publish/PCNetworkBackup-win-x64.exe"
+        run: |
+          Copy-Item "publish_full/PCNetworkBackup.exe" "publish_full/UTZ_FileSync.exe"
+          Copy-Item "publish_small/PCNetworkBackup.exe" "publish_small/UTZ_FileSync_Portable_Small.exe"
 
-      - name: Upload build artifact
+      - name: Zip Build Outputs
+        shell: pwsh
+        run: |
+          Compress-Archive -Path "publish_full/UTZ_FileSync.exe" -DestinationPath "UTZ_FileSync_Portable_Full.zip"
+          Compress-Archive -Path "publish_small/UTZ_FileSync_Portable_Small.exe" -DestinationPath "UTZ_FileSync_Portable_Small.zip"
+
+      - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: PCNetworkBackup-win-x64
-          path: publish/PCNetworkBackup-win-x64.exe
+          name: UTZ_FileSync_Executables
+          path: |
+            UTZ_FileSync_Portable_Full.zip
+            UTZ_FileSync_Portable_Small.zip
+            publish_full/UTZ_FileSync.exe
+            publish_small/UTZ_FileSync_Portable_Small.exe
           if-no-files-found: error
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: |
+            UTZ_FileSync_Portable_Full.zip
+            UTZ_FileSync_Portable_Small.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

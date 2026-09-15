@@ -8,7 +8,7 @@ public class AdvancedInfoForm : Form
 {
     public AdvancedInfoForm(AppConfig config)
     {
-        Text = "Advanced / debug info";
+        Text = "Advanced Debug Info";
         ClientSize = new Size(500, 380);
         FormBorderStyle = FormBorderStyle.FixedDialog;
         MaximizeBox = false;
