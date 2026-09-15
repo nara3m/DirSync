@@ -29,7 +29,7 @@ public class MainForm : Form
     // Add the copyright & GitHub link control
     private readonly LinkLabel _githubLink = new() 
     { 
-        Text = "© 2026 Nara Marella • GitHub", 
+        Text = "© Nara Marella", 
         AutoSize = true, 
         LinkColor = Color.Gray 
     };
